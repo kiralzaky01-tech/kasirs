@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistem Data - Dashboard</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7fa;
+    color: #263238;
+    padding-bottom: 50px;
+}
+
+/* NAVBAR */
+.atas {
+    background: #ffffff;
+    padding: 18px 45px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+
+.atas h1 {
+    color: #1e3a5f;
+    font-size: 23px;
+    margin-right: auto;
+    text-transform: capitalize;
+    font-weight: 700;
+}
+
+.atas a {
+    color: #4b5563;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 9px 14px;
+    border-radius: 6px;
+    transition: 0.2s;
+    font-size: 14px;
+}
+
+.atas a:hover {
+    background: #f1f5f9;
+    color: #2563eb;
+}
+
+/* JUDUL */
+h2 {
+    text-align: center;
+    color: #334155;
+    font-size: 21px;
+    margin: 5px auto 25px;
+    font-weight: 700;
+}
+
+/* RINGKASAN */
+.ringkasan-kontainer {
+    width: 92%;
+    max-width: 1200px;
+    margin: 0 auto 25px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.kartu-info {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+    transition: 0.2s;
+}
+
+.kartu-info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+}
+
+.kartu-info h4 {
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.kartu-info p {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    color: #1e3a5f;
+}
+
+#total-barang-masuk {
+    color: #15803d;
+}
+
+#total-barang-beli {
+    color: #c2410c;
+}
+
+/* PERINGATAN STOK */
+.peringatan-stok {
+    width: 92%;
+    max-width: 1200px;
+    margin: 0 auto 25px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+}
+
+.peringatan-stok h3 {
+    color: #475569;
+    margin: 0 0 15px;
+    font-size: 17px;
+}
+
+#daftar-stok-menipis {
+    padding-left: 20px;
+}
+
+#daftar-stok-menipis li {
+    color: #64748b;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+#daftar-stok-menipis li strong {
+    color: #334155;
+}
+
+/* RIWAYAT TRANSAKSI */
+.riwayat-kontainer {
+    width: 92%;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+    overflow-x: auto;
+}
+
+/* TAMBAHAN: HEADER RIWAYAT */
+.judul-riwayat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.riwayat-kontainer h3 {
+    color: #475569;
+    font-size: 17px;
+    margin-bottom: 0;
+}
+
+/* TAMBAHAN: TOMBOL HAPUS SEMUA */
+.btn-hapus-riwayat {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 8px 13px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-hapus-riwayat:hover {
+    background: #b91c1c;
+}
+
+/* TABEL */
+#tabel-riwayat {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+}
+
+#tabel-riwayat th {
+    background: #f1f5f9;
+    color: #374151;
+    padding: 13px 12px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    border-bottom: 1px solid #dbe1e8;
+}
+
+#tabel-riwayat th:first-child {
+    border-radius: 7px 0 0 0;
+}
+
+#tabel-riwayat th:last-child {
+    border-radius: 0 7px 0 0;
+}
+
+#tabel-riwayat td {
+    padding: 13px 12px;
+    border-bottom: 1px solid #edf0f2;
+    text-align: center;
+    font-size: 14px;
+    color: #374151;
+}
+
+#tabel-riwayat tr:hover td {
+    background: #f8fafc;
+}
+
+.jenis-masuk {
+    color: #15803d !important;
+    font-weight: 700;
+}
+
+.jenis-beli {
+    color: #c2410c !important;
+    font-weight: 700;
+}
+
+.kosong {
+    color: #94a3b8 !important;
+    padding: 20px !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+    .atas {
+        flex-direction: column;
+        padding: 18px 20px;
+        gap: 5px;
+    }
+
+    .atas h1 {
+        margin-right: 0;
+        margin-bottom: 8px;
+        font-size: 21px;
+    }
+
+    .atas a {
+        width: 100%;
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 18px;
+        padding: 0 15px;
+    }
+
+    .ringkasan-kontainer {
+        width: 92%;
+        grid-template-columns: 1fr;
+    }
+
+    .peringatan-stok,
+    .riwayat-kontainer {
+        width: 92%;
+    }
+
+    /* TAMBAHAN RESPONSIVE */
+    .judul-riwayat {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    #tabel-riwayat {
+        min-width: 800px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="atas">
+    <h1>Sistem Stock Barang</h1>
+    <a href="sistemstok.html">Data Barang</a>
+    <a href="databarangnya.html">Masuk atau Keluar</a>
+    <a href="dashboard.html">Dashboard</a>
+</div>
+
+<h2>Dashboard Ringkasan Sistem</h2>
+
+<!-- RINGKASAN -->
+<div class="ringkasan-kontainer">
+
+    <div class="kartu-info">
+        <h4>Total Jenis Barang</h4>
+        <p id="total-jenis-barang">0</p>
+    </div>
+
+    <div class="kartu-info">
+        <h4>Total Produk Masuk</h4>
+        <p id="total-barang-masuk">0</p>
+    </div>
+
+    <div class="kartu-info">
+        <h4>Total Produk Terbeli</h4>
+        <p id="total-barang-beli">0</p>
+    </div>
+
+</div>
+
+<!-- PERINGATAN STOK -->
+<div class="peringatan-stok">
+    <h3>⚠️ Peringatan Stok Menipis</h3>
+    <ul id="daftar-stok-menipis"></ul>
+</div>
+
+<!-- RIWAYAT TRANSAKSI -->
+<div class="riwayat-kontainer">
+
+    <!-- TAMBAHAN: JUDUL + TOMBOL -->
+    <div class="judul-riwayat">
+        <h3>Riwayat Transaksi</h3>
+
+        <button
+            class="btn-hapus-riwayat"
+            onclick="hapusSemuaRiwayat()">
+            🗑 Hapus Semua Riwayat
+        </button>
+    </div>
+
+    <table id="tabel-riwayat">
+        <thead>
+            <tr>
+                <th>Tanggal/Waktu</th>
+                <th>Nama Barang</th>
+                <th>Jenis Transaksi</th>
+                <th>Jumlah</th>
+                <th>Total Harga</th>
+            </tr>
+        </thead>
+
+        <tbody id="isi-riwayat">
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+let daftarBarang =
+    JSON.parse(localStorage.getItem('daftarBarang')) || [];
+
+let riwayatMutasi =
+    JSON.parse(localStorage.getItem('riwayatMutasi')) || [];
+
+/* TOTAL JENIS BARANG */
+document.getElementById('total-jenis-barang').innerText =
+    daftarBarang.length;
+
+/* TOTAL PRODUK MASUK DAN TERBELI */
+let hitungMasuk = 0;
+let hitungBeli = 0;
+
+riwayatMutasi.forEach(item => {
+
+    if (item.jenis === "Masuk") {
+        hitungMasuk += Number(item.jumlah);
+    }
+
+    else if (item.jenis === "Beli") {
+        hitungBeli += Number(item.jumlah);
+    }
+
+});
+
+document.getElementById('total-barang-masuk').innerText =
+    hitungMasuk;
+
+document.getElementById('total-barang-beli').innerText =
+    hitungBeli;
+
+/* PERINGATAN STOK */
+const ulStokMenipis =
+    document.getElementById('daftar-stok-menipis');
+
+ulStokMenipis.innerHTML = "";
+
+let barangKritis = daftarBarang.filter(barang =>
+    Number(barang.stok) <= Number(barang.minStok)
+);
+
+if (barangKritis.length === 0) {
+
+    ulStokMenipis.innerHTML =
+        "<li>🟢 Semua stok aman, tidak ada barang yang kritis.</li>";
+
+}
+
+else {
+
+    barangKritis.forEach(barang => {
+
+        let statusTeks =
+            Number(barang.stok) === 0
+                ? "HABIS (0)"
+                : `Tersisa ${barang.stok}`;
+
+        ulStokMenipis.innerHTML += `
+            <li>
+                <strong>${barang.nama}</strong> -
+                ${statusTeks}
+                (Batas minimum: ${barang.minStok})
+            </li>
+        `;
+
+    });
+
+}
+
+/* RIWAYAT TRANSAKSI */
+const isiRiwayat =
+    document.getElementById('isi-riwayat');
+
+if (riwayatMutasi.length === 0) {
+
+    isiRiwayat.innerHTML = `
+        <tr>
+            <td colspan="5" class="kosong">
+                Belum ada transaksi.
+            </td>
+        </tr>
+    `;
+
+}
+
+else {
+
+    /* Tampilkan dari transaksi terbaru */
+    [...riwayatMutasi].reverse().forEach(mutasi => {
+
+        const baris = document.createElement('tr');
+
+        const kelasJenis =
+            mutasi.jenis === "Masuk"
+                ? "jenis-masuk"
+                : "jenis-beli";
+
+        baris.innerHTML = `
+            <td>${mutasi.waktu}</td>
+            <td>${mutasi.nama}</td>
+            <td class="${kelasJenis}">
+                ${mutasi.jenis}
+            </td>
+            <td>${mutasi.jumlah}</td>
+            <td>
+                Rp ${Number(mutasi.totalHarga).toLocaleString('id-ID')}
+            </td>
+        `;
+
+        isiRiwayat.appendChild(baris);
+
+    });
+
+}
+
+
+/* ==========================================
+   HAPUS SEMUA RIWAYAT
+========================================== */
+
+function hapusSemuaRiwayat() {
+
+    if (riwayatMutasi.length === 0) {
+
+        alert("Belum ada riwayat transaksi.");
+
+        return;
+
+    }
+
+    const konfirmasi = confirm(
+        "Apakah kamu yakin ingin menghapus semua riwayat transaksi?"
+    );
+
+    if (!konfirmasi) {
+        return;
+    }
+
+    // Hapus data riwayat dari localStorage
+    localStorage.removeItem('riwayatMutasi');
+
+    // Kosongkan data yang sedang digunakan
+    riwayatMutasi = [];
+
+    // Kosongkan tabel
+    isiRiwayat.innerHTML = `
+        <tr>
+            <td colspan="5" class="kosong">
+                Belum ada transaksi.
+            </td>
+        </tr>
+    `;
+
+    // Reset total produk masuk
+    document.getElementById('total-barang-masuk').innerText = 0;
+
+    // Reset total produk terbeli
+    document.getElementById('total-barang-beli').innerText = 0;
+
+    alert("Semua riwayat berhasil dihapus.");
+
+}
+</script>
+
+</body>
+</html>
+```

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Data</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fa;
+            color: #263238;
+            padding-bottom: 50px;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+        .atas {
+            background: #ffffff;
+            padding: 18px 45px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .atas h1 {
+            color: #1e3a5f;
+            font-size: 23px;
+            margin-right: auto;
+            text-transform: capitalize;
+            font-weight: 700;
+        }
+
+        .atas a {
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 9px 14px;
+            border-radius: 6px;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+
+        .atas a:hover {
+            background: #f1f5f9;
+            color: #2563eb;
+        }
+
+        /* =========================
+           BUTTON TAMBAH
+        ========================= */
+        #btn-buka-form {
+            display: block;
+            margin: 0 auto 25px auto;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(37, 99, 235, 0.18);
+            transition: 0.2s;
+        }
+
+        #btn-buka-form:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        /* =========================
+           DIALOG
+        ========================= */
+        #kotak-input {
+            width: 400px;
+            max-width: 90%;
+            margin: auto;
+            border: none !important;
+            border-radius: 12px !important;
+            padding: 25px !important;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+        }
+
+        #kotak-input::backdrop {
+            background: rgba(15, 23, 42, 0.35);
+        }
+
+        #kotak-input h3 {
+            color: #1e3a5f;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        #kotak-input p {
+            margin-bottom: 15px;
+        }
+
+        #kotak-input label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        #kotak-input input {
+            width: 100%;
+            margin-top: 6px;
+            padding: 10px 11px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            outline: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        #kotak-input input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+        }
+
+        /* =========================
+           BUTTON FORM
+        ========================= */
+        #btn-batal,
+        #btn-simpan {
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        #btn-batal {
+            background: #ffffff;
+            color: #4b5563;
+            border: 1px solid #d1d5db;
+        }
+
+        #btn-batal:hover {
+            background: #f3f4f6;
+        }
+
+        #btn-simpan {
+            background: #2563eb;
+            color: white;
+            border: none;
+            margin-left: 8px;
+        }
+
+        #btn-simpan:hover {
+            background: #1d4ed8;
+        }
+
+        /* =========================
+           KOTAK DATA
+        ========================= */
+        .kotak {
+            width: 92%;
+            max-width: 1200px;
+            margin: auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            overflow-x: auto;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+        #tabel-barang {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+        }
+
+        #tabel-barang th {
+            background: #f1f5f9;
+            color: #374151;
+            padding: 13px 12px;
+            text-align: center;
+            text-transform: capitalize;
+            font-size: 13px;
+            font-weight: 700;
+            border-bottom: 1px solid #dbe1e8;
+        }
+
+        #tabel-barang th:first-child {
+            border-radius: 7px 0 0 0;
+        }
+
+        #tabel-barang th:last-child {
+            border-radius: 0 7px 0 0;
+        }
+
+        #tabel-barang td {
+            padding: 13px 12px;
+            border-bottom: 1px solid #edf0f2;
+            text-align: center;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        #tabel-barang tr:not(:first-child) {
+            transition: 0.15s;
+        }
+
+        #tabel-barang tr:not(:first-child):hover {
+            background: #f8fafc !important;
+        }
+
+        /* =========================
+           STATUS STOK
+        ========================= */
+
+        /* Stok habis */
+        #tabel-barang tr.stok-habis {
+            background: #fdf3f3;
+        }
+
+        /* Stok menipis */
+        #tabel-barang tr.stok-menipis {
+            background: #fffbf0;
+        }
+
+        /* Stok aman */
+        #tabel-barang tr.stok-aman {
+            background: #ffffff;
+        }
+
+        /* =========================
+           TOMBOL HAPUS
+        ========================= */
+        #tabel-barang button {
+            background: #f1f5f9;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            padding: 7px 13px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            font-size: 13px;
+        }
+
+        #tabel-barang button:hover {
+            background: #fee2e2;
+            border-color: #fca5a5;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+        @media (max-width: 700px) {
+
+            .atas {
+                flex-direction: column;
+                padding: 18px 20px;
+                gap: 5px;
+            }
+
+            .atas h1 {
+                margin-right: 0;
+                margin-bottom: 8px;
+                font-size: 21px;
+            }
+
+            .atas a {
+                width: 100%;
+                text-align: center;
+            }
+
+            .kotak {
+                width: 96%;
+                padding: 10px;
+            }
+
+            #tabel-barang {
+                min-width: 700px;
+            }
+
+            #btn-buka-form {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="atas">
+        <h1>Sistem Stock Barang</h1>
+
+        <a href="sistemstok.html">Data Barang</a>
+        <a href="databarangnya.html">Masuk atau Keluar</a>
+        <a href="dashboard.html">Dashboard</a>
+    </div>
+
+
+    <!-- BUTTON TAMBAH BARANG -->
+    <button id="btn-buka-form">+ Tambah Barang</button>
+
+
+    <!-- FORM TAMBAH BARANG -->
+    <dialog id="kotak-input">
+
+        <h3>Tambah Barang lama tukang baru :v</h3>
+
+        <form id="form-barang" method="dialog">
+
+            <p>
+                <label>Nama Barang:</label>
+                <br>
+                <input type="text" id="input-nama" required>
+            </p>
+
+            <p>
+                <label>Kategori:</label>
+                <br>
+                <input type="text" id="input-kategori" required>
+            </p>
+
+            <p>
+                <label>Harga:</label>
+                <br>
+                <input type="number" id="input-harga" min="0" required>
+            </p>
+
+            <p>
+                <label>Stok:</label>
+                <br>
+                <input type="number" id="input-stok" min="0" required>
+            </p>
+
+            <p>
+                <label>Minimum Stok:</label>
+                <br>
+                <input type="number" id="input-min-stok" min="0" required>
+            </p>
+
+            <br>
+
+            <button type="button" id="btn-batal">
+                Batal
+            </button>
+
+            <button type="submit" id="btn-simpan">
+                Simpan
+            </button>
+
+        </form>
+
+    </dialog>
+
+
+    <!-- TABEL BARANG -->
+    <div class="kotak">
+
+        <table border="0" id="tabel-barang">
+
+            <tr>
+                <th>Nama Barang</th>
+                <th>Kategori</th>
+                <th>Harga</th>
+                <th>Stok</th>
+                <th>Minimum Stock</th>
+                <th>Aksi</th>
+            </tr>
+
+        </table>
+
+    </div>
+
+
+    <script>
+
+        const btnBukaForm =
+            document.getElementById('btn-buka-form');
+
+        const kotakInput =
+            document.getElementById('kotak-input');
+
+        const formBarang =
+            document.getElementById('form-barang');
+
+        const btnBatal =
+            document.getElementById('btn-batal');
+
+        const tabelBarang =
+            document.getElementById('tabel-barang');
+
+
+        // Ambil data dari localStorage
+        let daftarBarang =
+            JSON.parse(localStorage.getItem('daftarBarang')) || [];
+
+
+        // =========================
+        // MENAMPILKAN DATA
+        // =========================
+
+        function tampilkanData() {
+
+            // Hapus data lama kecuali header
+            while (tabelBarang.rows.length > 1) {
+                tabelBarang.deleteRow(1);
+            }
+
+
+            daftarBarang.forEach((barang, index) => {
+
+                let barisBaru =
+                    tabelBarang.insertRow(-1);
+
+
+                // STATUS STOK
+                if (barang.stok <= 0) {
+
+                    barisBaru.classList.add("stok-habis");
+
+                } else if (barang.stok <= barang.minStok) {
+
+                    barisBaru.classList.add("stok-menipis");
+
+                } else {
+
+                    barisBaru.classList.add("stok-aman");
+
+                }
+
+
+                // DATA BARANG
+                barisBaru.insertCell(0).innerText =
+                    barang.nama;
+
+                barisBaru.insertCell(1).innerText =
+                    barang.kategori;
+
+                barisBaru.insertCell(2).innerText =
+                    barang.harga;
+
+                barisBaru.insertCell(3).innerText =
+                    barang.stok;
+
+                barisBaru.insertCell(4).innerText =
+                    barang.minStok;
+
+
+                // TOMBOL AKSI
+                let kolomAksi =
+                    barisBaru.insertCell(5);
+
+                kolomAksi.innerHTML =
+                    `<button onclick="hapusBaris(${index})">
+                        Hapus
+                    </button>`;
+
+            });
+
+        }
+
+
+        // =========================
+        // BUKA FORM
+        // =========================
+
+        btnBukaForm.addEventListener('click', () => {
+
+            formBarang.reset();
+
+            kotakInput.showModal();
+
+        });
+
+
+        // =========================
+        // TUTUP FORM
+        // =========================
+
+        btnBatal.addEventListener('click', () => {
+
+            kotakInput.close();
+
+        });
+
+
+        // =========================
+        // SIMPAN BARANG
+        // =========================
+
+        formBarang.addEventListener('submit', function () {
+
+            const nama =
+                document.getElementById('input-nama').value;
+
+            const kategori =
+                document.getElementById('input-kategori').value;
+
+            const harga =
+                Number(document.getElementById('input-harga').value);
+
+            const stok =
+                Number(document.getElementById('input-stok').value);
+
+            const minStok =
+                Number(document.getElementById('input-min-stok').value);
+
+
+            // Masukkan barang ke array
+            daftarBarang.push({
+
+                nama: nama,
+
+                kategori: kategori,
+
+                harga: harga,
+
+                stok: stok,
+
+                minStok: minStok
+
+            });
+
+
+            // Simpan ke localStorage
+            localStorage.setItem(
+                'daftarBarang',
+                JSON.stringify(daftarBarang)
+            );
+
+
+            // Tampilkan kembali
+            tampilkanData();
+
+        });
+
+
+        // =========================
+        // HAPUS BARANG
+        // =========================
+
+        function hapusBaris(index) {
+
+            daftarBarang.splice(index, 1);
+
+            localStorage.setItem(
+                'daftarBarang',
+                JSON.stringify(daftarBarang)
+            );
+
+            tampilkanData();
+
+        }
+
+
+        // =========================
+        // JALANKAN SAAT HALAMAN DIBUKA
+        // =========================
+
+        tampilkanData();
+
+    </script>
+
+</body>
+
+</html>
+```
